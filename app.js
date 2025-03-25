@@ -9,20 +9,21 @@ const path = require("path");
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || origin === `https://jashly-production.up.railway.app/`) { 
-            console.log("Alright!")
-            callback(null, true);
-        } else {
-            console.log("Not allowed by CORS.")
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    methods: ['POST'], 
-    allowedHeaders: ['Content-Type'],
-    credentials: true
-}));
+const corsOptionsDelegate = (req, callback) => {
+    const requestOrigin = req.get('origin') || req.get('referer');
+    const serverOrigin = `https://${req.get('host')}`;
+
+    if (!requestOrigin || requestOrigin.startsWith(serverOrigin)) {
+        console.log("Alright! Allowed:", requestOrigin);
+        callback(null, { origin: true, credentials: true });
+    } else {
+        console.log("Not allowed by CORS:", requestOrigin);
+        callback(new Error("Not allowed by CORS"));
+    }
+};
+
+app.use(cors(corsOptionsDelegate));
+
 
 const MurmurHash3 = require('murmurhash3js');
 const Database = require('better-sqlite3');
