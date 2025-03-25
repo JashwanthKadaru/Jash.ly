@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin === `http://localhost:${PORT}`) { 
+        if (!origin || origin === `https://jashly-production.up.railway.app/`) { 
             console.log("Alright!")
             callback(null, true);
         } else {
