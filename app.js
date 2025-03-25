@@ -1,10 +1,23 @@
 const express = require("express")
 const app = express()
 
+require('dotenv').config();
 const PORT = process.env.PORT | 3000
 
 const cors = require('cors');
 const path = require("path");
+
+const helmet = require('helmet');
+app.use(helmet());
+
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+    windowMs: 2 * 60 * 60 * 1000, // 2 hours
+    max: 200, // Limit each IP to 200 requests per window
+});
+
+app.use(limiter);
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
