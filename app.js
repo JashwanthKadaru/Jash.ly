@@ -7,9 +7,6 @@ const PORT = process.env.PORT | 3000
 const cors = require('cors');
 const path = require("path");
 
-const helmet = require('helmet');
-app.use(helmet());
-
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
